@@ -1,4 +1,4 @@
-# Knobelscheit
+# Tanzverbot Diet
 
 Run the tests:
 
