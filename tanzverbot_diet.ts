@@ -3,6 +3,8 @@ export enum Sex {
   Female = "f",
 }
 
+// TODO: Code smell - related food data is stored in parallel arrays.
+// Replace with a single typed structure to avoid index coupling bugs.
 const foodNames: string[] = [
   "Kellogg's Tresor",
   "Weihenstephan Haltbare Milch",
@@ -25,6 +27,8 @@ export function calcDateOnDiet(
   ageY: number,
   sex: Sex,
 ): number {
+  // TODO: Code smell - this function mixes validation, calorie aggregation,
+  // BMR calculation and diet duration calculation (long method).
   const weightGainKg = targetWeightKg - currentWeightKg;
   if (weightGainKg < 0) {
     throw new Error(`This diet is for gaining weight, not loosing it!`);
@@ -33,12 +37,16 @@ export function calcDateOnDiet(
     throw new Error(`You do not qualify for this kind of diet.`);
   }
   let dailyCaloriesOnDiet = 0;
+  // TODO: Code smell - iterating over indexes from a names array is brittle.
+  // Iterate over food entries directly after replacing the data model.
   for (const index in foodNames) {
     const calories = foodCalories[index] || 0;
     const servings = foodServings[index] || 0;
     dailyCaloriesOnDiet += calories * servings;
   }
   let dailyCaloriesBasicMetabolicRate = 0;
+  // TODO: Code smell - sex-specific formulas duplicate assignment logic.
+  // Extract a dedicated BMR function.
   if (sex == Sex.Male) {
     dailyCaloriesBasicMetabolicRate = Math.ceil(
       // Harris-Benedict-Formula (Male)
