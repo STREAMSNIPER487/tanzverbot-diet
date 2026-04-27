@@ -9,7 +9,14 @@ type FoodEntry = {
   servingsPerDay: number;
 };
 
-const foodPlan: FoodEntry[] = [
+export type DietPlan = {
+  name: string;
+  entries: FoodEntry[];
+};
+
+export const TANZVERBOT_DIET_CLASSIC: DietPlan = {
+  name: "Tanzverbot Classic",
+  entries: [
   {
     name: "Kellogg's Tresor",
     caloriesPerServing: 137,
@@ -60,7 +67,21 @@ const foodPlan: FoodEntry[] = [
     caloriesPerServing: 59,
     servingsPerDay: 20,
   },
-];
+  ],
+};
+
+export const TANZVERBOT_DIET_2018: DietPlan = {
+  name: "Tanzverbot 2018",
+  // TODO: Replace entries with the exact food table extracted from
+  // https://www.youtube.com/watch?v=7xDmgGV3gS0
+  entries: [
+    {
+      name: "Fettsack-Diaet Tagesration",
+      caloriesPerServing: 5000,
+      servingsPerDay: 1,
+    },
+  ],
+};
 
 function validateInputs(weightGainKg: number, heightM: number, ageY: number) {
   if (weightGainKg < 0) {
@@ -71,8 +92,8 @@ function validateInputs(weightGainKg: number, heightM: number, ageY: number) {
   }
 }
 
-function calcDailyCaloriesOnDiet(plan: FoodEntry[]): number {
-  return plan.reduce((sum, food) => {
+function calcDailyCaloriesOnDiet(plan: DietPlan): number {
+  return plan.entries.reduce((sum, food) => {
     return sum + food.caloriesPerServing * food.servingsPerDay;
   }, 0);
 }
@@ -113,10 +134,11 @@ export function calcDateOnDiet(
   heightM: number,
   ageY: number,
   sex: Sex,
+  dietPlan: DietPlan = TANZVERBOT_DIET_CLASSIC,
 ): number {
   const weightGainKg = targetWeightKg - currentWeightKg;
   validateInputs(weightGainKg, heightM, ageY);
-  const dailyCaloriesOnDiet = calcDailyCaloriesOnDiet(foodPlan);
+  const dailyCaloriesOnDiet = calcDailyCaloriesOnDiet(dietPlan);
   const averageWeightKg = calcAverageWeightKg(currentWeightKg, targetWeightKg);
   const dailyCaloriesBasicMetabolicRate = calcBasicMetabolicRate(averageWeightKg, heightM, ageY, sex);
   const dailyExcessCalories = calcDailyExcessCalories(
