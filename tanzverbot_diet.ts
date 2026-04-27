@@ -92,6 +92,10 @@ function calcBasicMetabolicRate(
   return Math.ceil(655.1 + 9.563 * weightKg + 1.85 * heightM * 100.0 - 4.676 * ageY);
 }
 
+function calcAverageWeightKg(currentWeightKg: number, targetWeightKg: number): number {
+  return (currentWeightKg + targetWeightKg) / 2;
+}
+
 function calcDailyExcessCalories(
   dailyCaloriesOnDiet: number,
   dailyCaloriesBasicMetabolicRate: number,
@@ -113,7 +117,8 @@ export function calcDateOnDiet(
   const weightGainKg = targetWeightKg - currentWeightKg;
   validateInputs(weightGainKg, heightM, ageY);
   const dailyCaloriesOnDiet = calcDailyCaloriesOnDiet(foodPlan);
-  const dailyCaloriesBasicMetabolicRate = calcBasicMetabolicRate(currentWeightKg, heightM, ageY, sex);
+  const averageWeightKg = calcAverageWeightKg(currentWeightKg, targetWeightKg);
+  const dailyCaloriesBasicMetabolicRate = calcBasicMetabolicRate(averageWeightKg, heightM, ageY, sex);
   const dailyExcessCalories = calcDailyExcessCalories(
     dailyCaloriesOnDiet,
     dailyCaloriesBasicMetabolicRate,

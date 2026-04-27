@@ -1,8 +1,8 @@
 import { assertEquals, assertThrows } from "@std/assert";
 import { calcDateOnDiet, Sex } from "./tanzverbot_diet.ts";
 
-Deno.test("returns deterministic days for male example", () => {
-  assertEquals(calcDateOnDiet(74, 100, 1.86, 38, Sex.Male), 36);
+Deno.test("returns deterministic days for male example with average-weight BMR", () => {
+  assertEquals(calcDateOnDiet(74, 100, 1.86, 38, Sex.Male), 37);
 });
 
 Deno.test("throws when target is below current weight", () => {
